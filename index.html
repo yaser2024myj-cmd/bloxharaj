@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="docTitle">حراج Blox Fruits</title>
+  <style>
+    :root {
+      --bg-color: #121824;
+      --card-bg: #1c2536;
+      --accent-color: #10b981;
+      --accent-hover: #059669;
+      --text-color: #f3f4f6;
+      --border-color: #374151;
+      --danger-color: #ef4444;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+      direction: rtl;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      position: relative;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .header-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .lang-btn, .auth-btn, .report-open-btn {
+      background: var(--border-color);
+      color: var(--text-color);
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .auth-btn {
+      background: #4285F4;
+      color: white;
+      font-weight: bold;
+    }
+
+    .auth-btn:hover {
+      background: #3367d6;
+    }
+
+    .warning-banner {
+      background-color: rgba(239, 68, 68, 0.15);
+      border: 1px solid var(--danger-color);
+      color: #fca5a5;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    select, input, textarea {
+      width: 100%;
+      padding: 10px;
+      background: var(--bg-color);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .trades-list {
+      margin-top: 30px;
+    }
+
+    .trade-card {
+      background: var(--bg-color);
+      border: 1px solid var(--border-color);
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .trade-header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 5px;
+      margin-bottom: 10px;
+    }
+
+    .user-profile-link {
+      cursor: pointer;
+      color: #60a5fa;
+      text-decoration: underline;
+    }
+
+    .quick-replies {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .reply-btn {
+      background: var(--border-color);
+      color: var(--text-color);
+      border: none;
+      padding: 5px 10px;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .reply-btn:hover {
+      background: var(--accent-color);
+    }
+
+    /* زر سجل المحادثات الثابت في الزاوية اليسرى السفلى */
+    .history-fab {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 50px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      cursor: pointer;
+      font-weight: bold;
+      z-index: 999;
+    }
+
+    /* النوافذ المنبثقة (Modals) */
+    .modal-overlay {
+      position: fixed;
+      top:0; left:0; width:100%; height:100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 450px;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+      border: 1px solid var(--border-color);
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      left: 15px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: var(--danger-color);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h2 id="title">حراج Blox Fruits</h2>
+    <div class="header-btns">
+      <button class="auth-btn" onclick="loginWithGoogle()" id="googleBtn">تسجيل بـ Google</button>
+      <button class="report-open-btn" onclick="toggleModal('reportModal')" id="reportOpenBtn">تقديم بلاغ</button>
+      <button class="lang-btn" onclick="toggleLanguage()" id="langBtn">English</button>
+    </div>
+  </div>
+
+  <!-- تنبيه الحماية المسؤولية وبنود الخصوصية -->
+  <div class="warning-banner" id="warningBanner">
+    ⚠️ الموقع غير مسؤول إطلاقاً إذا تمت المبادلة أو التعامل على شيء خارج نطاق حراج أو الموقع.
+  </div>
+
+  <form id="tradeForm" onsubmit="event.preventDefault(); addTrade();">
+    
+    <!-- 1. اسم الحساب في الأعلى -->
+    <div class="form-group">
+      <label id="lblUser">اسم حسابك للتواصل (روبلوكس / ديسكورد):</label>
+      <input type="text" id="username" placeholder="مثال: RobloxUser123" required>
+    </div>
+
+    <!-- 2. نوع العملية -->
+    <div class="form-group">
+      <label id="lblType">نوع العملية:</label>
+      <select id="tradeType" onchange="updateFormFields()">
+        <option value="trade" id="optTrade">تداول (مقايضة)</option>
+        <option value="sell" id="optSell">بيع</option>
+        <option value="search" id="optSearch">أبحث عن</option>
+      </select>
+    </div>
+
+    <!-- 3. حالة الفاكهة -->
+    <div class="form-group">
+      <label id="lblState">حالة الفاكهة:</label>
+      <select id="fruitState">
+        <option value="physical" id="optPhysical">عادية (Physical)</option>
+        <option value="perm" id="optPerm">دائمة (Perm)</option>
+      </select>
+    </div>
+
+    <!-- خانات ديناميكية حسب نوع العملية -->
+    <div id="dynamicFields">
+      <!-- الخانة الأولى: الفاكهة المعروضة / المتوفرة -->
+      <div class="form-group" id="offeredGroup">
+        <label id="lblOffered">الفاكهة المعروضة / المتوفرة:</label>
+        <select id="offeredFruit"></select>
+      </div>
+
+      <!-- الخانة الثانية: الفاكهة المطلوبة أو السعر -->
+      <div class="form-group" id="requestedGroup">
+        <label id="lblRequested">الفاكهة المطلوبة / أو السعر:</label>
+        <select id="requestedFruit"></select>
+        <input type="text" id="priceInput" class="hidden" placeholder="حدد السعر المطلوب...">
+      </div>
+    </div>
+
+    <!-- زر النشر -->
+    <button type="submit" class="submit-btn" id="submitBtn" onclick="handlePublishClick()">نشر العرض فوراً</button>
+  </form>
+
+  <hr style="margin: 30px 0; border-color: var(--border-color);">
+
+  <h3 id="lblRecent">أحدث عروض التداول والبيع</h3>
+  <div class="trades-list" id="tradesList">
+    <p id="noTradesText" style="text-align: center; color: #888;">لا توجد عروض حالياً، كن أول من ينشر عرضاً!</p>
+  </div>
+</div>
+
+<!-- زر سجل المحادثات الثابت بالأسفل يسار -->
+<button class="history-fab" onclick="toggleModal('historyModal')" id="historyFabBtn">💬 المحادثات</button>
+
+<!-- النافذة المنبثقة: سجل المحادثات -->
+<div id="historyModal" class="modal-overlay hidden">
+  <div class="modal-content">
+    <span class="close-modal" onclick="toggleModal('historyModal')">✖</span>
+    <h3 id="modalHistTitle">سجل المحادثات السابقة</h3>
+    <div id="historyList">
+      <p style="color: #888;" id="noHistText">لا توجد محادثات سابقة.</p>
+    </div>
+  </div>
+</div>
+
+<!-- النافذة المنبثقة: بروفايل المستخدم والمحادثة الخاصة -->
+<div id="profileModal" class="modal-overlay hidden">
+  <div class="modal-content">
+    <span class="close-modal" onclick="toggleModal('profileModal')">✖</span>
+    <h3 id="profUserTitle">ملف المستخدم</h3>
+    <p><b>التقييم:</b> ⭐⭐⭐⭐⭐ (5/5)</p>
+    <p><b>العمليات الناجحة:</b> 12 عملية</p>
+    <hr style="border-color: var(--border-color);">
+    <h4 id="profChatTitle">محادثة خاصة</h4>
+    <div id="chatBox" style="height: 120px; background: var(--bg-color); border: 1px solid var(--border-color); padding: 8px; border-radius: 6px; overflow-y: auto; margin-bottom: 10px;">
+      <p style="color: #888; font-size: 0.85rem;" id="chatStartMsg">ابدأ المحادثة الآن...</p>
+    </div>
+    <div style="display: flex; gap: 5px;">
+      <input type="text" id="chatInput" placeholder="اكتب رسالتك...">
+      <button class="reply-btn" style="background: var(--accent-color); color: white;" onclick="sendChatMessage()" id="chatSendBtn">إرسال</button>
+    </div>
+  </div>
+</div>
+
+<!-- النافذة المنبثقة: تقديم بلاغ -->
+<div id="reportModal" class="modal-overlay hidden">
+  <div class="modal-content">
+    <span class="close-modal" onclick="toggleModal('reportModal')">✖</span>
+    <h3 id="reportTitle">تقديم بلاغ عن محتال</h3>
+    <div class="form-group">
+      <label id="lblReportUser">اسم يوزر المشتبه به:</label>
+      <input type="text" id="reportUsername" placeholder="يوزر روبلوكس/ديسكورد">
+    </div>
+    <div class="form-group">
+      <label id="lblReportDesc">تفاصيل ما حدث معك:</label>
+      <textarea id="reportDesc" rows="3" placeholder="اشرح بالتفصيل عملية النصب..."></textarea>
+    </div>
+    <div class="form-group">
+      <label id="lblReportProof">رابط الدليل (صورة/فيديو):</label>
+      <input type="text" id="reportProof" placeholder="ضع رابط الصورة أو مقطع الإثبات">
+    </div>
+    <button class="submit-btn" onclick="submitReport()" id="reportSubmitBtn">إرسال البلاغ</button>
+  </div>
+</div>
+
+<script>
+  // قائمة الفواكه بعد تحديث المسميات: Creation بدلاً من Barrier، Lightning بدلاً من Rumble، و Eagle بدلاً من Falcon
+  const allFruits = [
+    "Rocket", "Spin", "Blade", "Spring", "Bomb", "Smoke", "Spike", "Flame", 
+    "Eagle", "Ice", "Sand", "Dark", "Diamond", "Light", "Rubber", "Creation", 
+    "Ghost", "Magma", "Quake", "Buddha", "Love", "Spider", "Sound", "Phoenix", 
+    "Portal", "Lightning", "Pain", "Blizzard", "Gravity", "Mammoth", "T-Rex", 
+    "Dough", "Shadow", "Venom", "Control", "Spirit", "Dragon", "Leopard", "Kitsune"
+  ];
+
+  const quickRepliesArr = [
+    "أنا لدي عرض",
+    "تعال إلى الخاص",
+    "هل تقبل المقايضة؟",
+    "هل تريد أن تبيعها؟",
+    "أعطني عرضك"
+  ];
+
+  let currentLang = 'ar';
+  let publishClickCount = 0;
+  let clickTimer = null;
+  let activeProfileUser = '';
+
+  // تهيئة قائمة الفواكه
+  function populateFruits() {
+    const offeredSelect = document.getElementById('offeredFruit');
+    const requestedSelect = document.getElementById('requestedFruit');
+    
+    const offeredPlaceholder = currentLang === 'ar' ? '-- اختر الفاكهة --' : '-- Select Fruit --';
+    const requestedPlaceholder = currentLang === 'ar' ? '-- اختر الفاكهة أو "عرض كويس" --' : '-- Select Fruit or "Good Offer" --';
+    const goodOfferText = currentLang === 'ar' ? 'عرض كويس (بدون اشتراط)' : 'Good Offer (No conditions)';
+
+    offeredSelect.innerHTML = `<option value="">${offeredPlaceholder}</option>`;
+    requestedSelect.innerHTML = `<option value="">${requestedPlaceholder}</option><option value="عرض كويس">${goodOfferText}</option>`;
+
+    allFruits.forEach(fruit => {
+      offeredSelect.innerHTML += `<option value="${fruit}">${fruit}</option>`;
+      requestedSelect.innerHTML += `<option value="${fruit}">${fruit}</option>`;
+    });
+  }
+
+  // تحديث الخانات ديناميكياً بناءً على الخيار المحدد
+  function updateFormFields() {
+    const type = document.getElementById('tradeType').value;
+    const offeredGroup = document.getElementById('offeredGroup');
+    const requestedGroup = document.getElementById('requestedGroup');
+    const requestedFruit = document.getElementById('requestedFruit');
+    const priceInput = document.getElementById('priceInput');
+
+    if (type === 'search') {
+      offeredGroup.classList.add('hidden');
+      requestedGroup.classList.remove('hidden');
+      requestedFruit.classList.remove('hidden');
+      priceInput.classList.add('hidden');
+      document.getElementById('lblRequested').innerText = currentLang === 'ar' ? 'الفاكهة المطلوبة:' : 'Requested Fruit:';
+    } else if (type === 'sell') {
+      offeredGroup.classList.remove('hidden');
+      requestedGroup.classList.remove('hidden');
+      requestedFruit.classList.add('hidden');
+      priceInput.classList.remove('hidden');
+      document.getElementById('lblOffered').innerText = currentLang === 'ar' ? 'الفاكهة للبيع:' : 'Fruit for Sale:';
+      document.getElementById('lblRequested').innerText = currentLang === 'ar' ? 'السعر المطلوب:' : 'Price:';
+    } else {
+      offeredGroup.classList.remove('hidden');
+      requestedGroup.classList.remove('hidden');
+      requestedFruit.classList.remove('hidden');
+      priceInput.classList.add('hidden');
+      document.getElementById('lblOffered').innerText = currentLang === 'ar' ? 'الفاكهة المعروضة / المتوفرة:' : 'Offered Fruit:';
+      document.getElementById('lblRequested').innerText = currentLang === 'ar' ? 'الفاكهة المطلوبة / أو السعر:' : 'Requested Fruit / Price:';
+    }
+  }
+
+  // نظام الأدمن بالضغط 7 مرات متتالية
+  function handlePublishClick() {
+    publishClickCount++;
+    if (clickTimer) clearTimeout(clickTimer);
+
+    if (publishClickCount === 7) {
+      publishClickCount = 0;
+      const code = prompt(currentLang === 'ar' ? "أدخل رمز الأدمن:" : "Enter Admin Code:");
+      if (code === "kokusen1") {
+        alert("مرحباً بالأدمن ياسر");
+      } else if (code === "songoku2") {
+        alert("مرحباً بالأدمن أصيل");
+      } else if (code) {
+        alert(currentLang === 'ar' ? "رمز خاطئ!" : "Incorrect Code!");
+      }
+    } else {
+      clickTimer = setTimeout(() => { publishClickCount = 0; }, 2000);
+    }
+  }
+
+  // إضافة عرض جديد
+  function addTrade() {
+    const username = document.getElementById('username').value;
+    const type = document.getElementById('tradeType').value;
+    const state = document.getElementById('fruitState').value;
+    const offered = document.getElementById('offeredFruit').value;
+    const requested = document.getElementById('requestedFruit').value;
+    const price = document.getElementById('priceInput').value;
+
+    if (!username) return;
+
+    const noTradesText = document.getElementById('noTradesText');
+    if (noTradesText) noTradesText.remove();
+
+    const tradesList = document.getElementById('tradesList');
+    const card = document.createElement('div');
+    card.className = 'trade-card';
+
+    let details = '';
+    let typeLabel = type === 'sell' ? (currentLang === 'ar' ? 'بيع' : 'Sell') : 
+                    type === 'search' ? (currentLang === 'ar' ? 'أبحث عن' : 'Search') : 
+                    (currentLang === 'ar' ? 'تداول' : 'Trade');
+
+    const stateLabel = state === 'perm' ? (currentLang === 'ar' ? 'دائمة' : 'Perm') : (currentLang === 'ar' ? 'عادية' : 'Physical');
+
+    if (type === 'search') {
+      details = currentLang === 'ar' ? `يبحث عن: <b>${requested}</b> (${stateLabel})` : `Searching for: <b>${requested}</b> (${stateLabel})`;
+    } else if (type === 'sell') {
+      details = currentLang === 'ar' ? `يعرض: <b>${offered}</b> (${stateLabel}) | السعر: <b>${price}</b>` : `Selling: <b>${offered}</b> (${stateLabel}) | Price: <b>${price}</b>`;
+    } else {
+      details = currentLang === 'ar' ? `يعرض: <b>${offered}</b> (${stateLabel}) 🔁 يطلب: <b>${requested}</b>` : `Offering: <b>${offered}</b> (${stateLabel}) 🔁 Requesting: <b>${requested}</b>`;
+    }
+
+    let quickRepliesHtml = '<div class="quick-replies">';
+    quickRepliesArr.forEach(reply => {
+      quickRepliesHtml += `<button class="reply-btn" onclick="alert('${currentLang === 'ar' ? 'تم إرسال الرد: ' : 'Reply sent: '}${reply}')">${reply}</button>`;
+    });
+    quickRepliesHtml += '</div>';
+
+    card.innerHTML = `
+      <div class="trade-header">
+        <span>👤 <b class="user-profile-link" onclick="openProfile('${username}')">${username}</b></span>
+        <span style="color: var(--accent-color); font-weight: bold;">[${typeLabel}]</span>
+      </div>
+      <div>${details}</div>
+      ${quickRepliesHtml}
+    `;
+
+    tradesList.prepend(card);
+    document.getElementById('tradeForm').reset();
+    updateFormFields();
+  }
+
+  // فتح وإغلاق النوافذ المنبثقة
+  function toggleModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) modal.classList.toggle('hidden');
+  }
+
+  // فتح ملف المستخدم للدردشة وتقييم الحساب
+  function openProfile(uname) {
+    activeProfileUser = uname;
+    document.getElementById('profUserTitle').innerText = (currentLang === 'ar' ? 'ملف المستخدم: ' : 'User Profile: ') + uname;
+    document.getElementById('chatBox').innerHTML = `<p style="color: #888; font-size: 0.85rem;">${currentLang === 'ar' ? 'ابدأ المحادثة مع ' : 'Start conversation with '}${uname}...</p>`;
+    toggleModal('profileModal');
+  }
+
+  // إرسال رسالة في الخاص وتسجيلها في الهيستوري
+  function sendChatMessage() {
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    const chatBox = document.getElementById('chatBox');
+    chatBox.innerHTML += `<div><b>أنت:</b> ${msg}</div>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // تسجيل المحادثة في الهيستوري
+    const noHistText = document.getElementById('noHistText');
+    if (noHistText) noHistText.remove();
+
+    const historyList = document.getElementById('historyList');
+    historyList.innerHTML += `<div style="padding: 5px 0; border-bottom: 1px solid var(--border-color);"><b>محادثة مع ${activeProfileUser}:</b> ${msg}</div>`;
+
+    input.value = '';
+  }
+
+  // تقديم بلاغ
+  function submitReport() {
+    const uname = document.getElementById('reportUsername').value;
+    const desc = document.getElementById('reportDesc').value;
+    if (!uname || !desc) {
+      alert(currentLang === 'ar' ? "يرجى تعبئة كافة الحقول المطلوب" : "Please fill required fields");
+      return;
+    }
+    alert(currentLang === 'ar' ? "تم إرسال البلاغ إلى الإدارة بنجاح!" : "Report submitted successfully!");
+    document.getElementById('reportUsername').value = '';
+    document.getElementById('reportDesc').value = '';
+    document.getElementById('reportProof').value = '';
+    toggleModal('reportModal');
+  }
+
+  // تسجيل الدخول بواسطة Google
+  function loginWithGoogle() {
+    alert(currentLang === 'ar' ? "جاري تحويلك لتسجيل الدخول بـ Google..." : "Redirecting to Google Login...");
+  }
+
+  // التبديل الجذري والكامل للغة بين العربية والإنجليزية
+  function toggleLanguage() {
+    currentLang = currentLang === 'ar' ? 'en' : 'ar';
+    document.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+
+    document.getElementById('docTitle').innerText = currentLang === 'ar' ? 'حراج Blox Fruits' : 'Blox Fruits Market';
+    document.getElementById('title').innerText = currentLang === 'ar' ? 'حراج Blox Fruits' : 'Blox Fruits Market';
+    document.getElementById('langBtn').innerText = currentLang === 'ar' ? 'English' : 'عربي';
+    document.getElementById('googleBtn').innerText = currentLang === 'ar' ? 'تسجيل بـ Google' : 'Login with Google';
+    document.getElementById('reportOpenBtn').innerText = currentLang === 'ar' ? 'تقديم بلاغ' : 'Report User';
+    
+    document.getElementById('warningBanner').innerText = currentLang === 'ar' ? 
+      '⚠️ الموقع غير مسؤول إطلاقاً إذا تمت المبادلة أو التعامل على شيء خارج نطاق حراج أو الموقع.' : 
+      '⚠️ The site is not responsible for trades made outside of the platform.';
+
+    document.getElementById('lblUser').innerText = currentLang === 'ar' ? 'اسم حسابك للتواصل (روبلوكس / ديسكورد):' : 'Username (Roblox / Discord):';
+    document.getElementById('lblType').innerText = currentLang === 'ar' ? 'نوع العملية:' : 'Operation Type:';
+    document.getElementById('lblState').innerText = currentLang === 'ar' ? 'حالة الفاكهة:' : 'Fruit State:';
+    document.getEle
